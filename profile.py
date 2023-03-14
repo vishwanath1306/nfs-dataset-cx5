@@ -45,6 +45,9 @@ pc.defineParameter("osImage", "Select OS image",
                    portal.ParameterType.IMAGE,
                    imageList[1], imageList)
 
+pc.defineParameter("phystype", "Optional Physical Node Type",
+                   portal.ParameterType.STRING, "", longDescription="Specificy a physical node type (eg c6525-25g) with CX5 NIC instead of letting resource mapper choose for you. Default is c6525-25g.")
+
 # Always need this when using parameters
 params = pc.bindParameters()
 
@@ -79,6 +82,10 @@ dslink.link_multiplexing = True
 for i in range(1, params.clientCount+1):
     node = request.RawPC("node%d" % i)
     node.disk_image = params.osImage
+    if params.phystype != "":
+        node.hardware_type = params.phystype
+    else:
+        node.hardware_type = "c6525-25g"
     nfsLan.addInterface(node.addInterface())
     # Initialization script for the clients
     node.addService(pg.Execute(shell="sh", command="sudo /bin/bash /local/repository/nfs-client.sh"))
