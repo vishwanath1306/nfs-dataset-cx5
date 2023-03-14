@@ -60,6 +60,7 @@ nfsLan.link_multiplexing = True
 # The NFS server.
 nfsServer = request.RawPC(nfsServerName)
 nfsServer.disk_image = params.osImage
+nfsServer.phystype = params.phystype
 # Attach server to lan.
 nfsLan.addInterface(nfsServer.addInterface())
 # Initialization script for the server
@@ -89,7 +90,6 @@ for i in range(1, params.clientCount+1):
     nfsLan.addInterface(node.addInterface())
     # Initialization script for the clients
     node.addService(pg.Execute(shell="sh", command="sudo /bin/bash /local/repository/nfs-client.sh"))
-    pass
 
 # Print the RSpec to the enclosing page.
 pc.printRequestRSpec(request)
